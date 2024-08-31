@@ -1,17 +1,20 @@
 const express = require('express');
 const { exec, spawn } = require('child_process');
 const path = require('path');
+const http = require('http');
 const WebSocket = require('ws');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const WS_PORT = process.env.WS_PORT || 3001;
 
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
 
+// Create HTTP server
+const server = http.createServer(app);
+
 // WebSocket server
-const wss = new WebSocket.Server({ port: WS_PORT });
+const wss = new WebSocket.Server({ server, path: '/ws' });
 
 wss.on('connection', ws => {
     console.log('WebSocket connection established.');
@@ -165,6 +168,6 @@ wss.on('connection', ws => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
