@@ -603,7 +603,7 @@
           ws.close();
         }
 
-        ws = new WebSocket("ws://localhost:3001");
+        ws = new WebSocket("wss://ethereum-sepolia-project.onrender.com");
 
         ws.onopen = function () {
           ws.send(JSON.stringify({ scriptId, params }));
