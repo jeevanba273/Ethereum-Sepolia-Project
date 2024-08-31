@@ -336,28 +336,21 @@
       </div>
     </div>
     <div id="outputContainer">
-      <div id="output" data-content="Output will appear here...">
-        <pre id="outputContent"></pre>
+      <div id="outputWrapper">
+        <div id="output" data-content="Running..."></div>
+        <button id="stopScript7Button" onclick="stopScript7()">
+          Stop Monitoring
+        </button>
       </div>
-      <button
-        onclick="stopScript7()"
-        id="stopScript7Button"
-        style="display: none"
-      >
-        Stop Monitoring
-      </button>
     </div>
-
     <script>
       let currentScriptId = null;
-      let ws = null;
+      let websocket = null;
 
       function startScript(scriptId) {
         currentScriptId = scriptId;
         clearOutput();
         clearInputs();
-
-        window.scrollTo(0, 0);
 
         document.getElementById("inputBox").style.display = "none";
         document.getElementById("script3InputBox").style.display = "none";
@@ -393,97 +386,55 @@
       }
 
       function clearOutput() {
-        document.getElementById("outputContent").innerHTML = "";
-        document
-          .getElementById("output")
-          .setAttribute("data-content", "Output will appear here...");
+        document.getElementById("output").innerHTML = "";
       }
 
       function clearInputs() {
-        document.getElementById("infuraProjectId").value = "";
-        document.getElementById("script3InfuraProjectId").value = "";
-        document.getElementById("walletAddress").value = "";
-        document.getElementById("script4InfuraProjectId").value = "";
-        document.getElementById("senderAddress").value = "";
-        document.getElementById("privateKey").value = "";
-        document.getElementById("receiverAddress").value = "";
-        document.getElementById("script5InfuraProjectId").value = "";
-        document.getElementById("script5WalletAddress").value = "";
-        document.getElementById("script6InfuraProjectId").value = "";
-        document.getElementById("script6WalletAddress").value = "";
-        document.getElementById("script7InfuraProjectId").value = "";
-        document.getElementById("script7WalletAddress").value = "";
-        document.getElementById("script8InfuraProjectId").value = "";
-        document.getElementById("script8PrivateKey").value = "";
-        document.getElementById("script8ReceiverAddress").value = "";
+        document.querySelectorAll("#inputContainer input").forEach((input) => {
+          input.value = "";
+        });
       }
 
       function submitProjectId() {
-        const infuraProjectId = document
-          .getElementById("infuraProjectId")
-          .value.trim();
+        const infuraProjectId =
+          document.getElementById("infuraProjectId").value;
         if (!infuraProjectId) {
-          alert("Please enter a valid Infura Project ID.");
+          alert("Please enter the Infura Project ID.");
           return;
         }
-
-        clearOutput();
-        document
-          .getElementById("output")
-          .setAttribute("data-content", "Running...");
-        openConnectionAndSendRequest(currentScriptId, infuraProjectId);
-
-        clearInputs();
+        localStorage.setItem("infuraProjectId", infuraProjectId);
+        startScript(currentScriptId);
       }
 
       function runScript3() {
-        const infuraProjectId = document
-          .getElementById("script3InfuraProjectId")
-          .value.trim();
-        const walletAddress = document
-          .getElementById("walletAddress")
-          .value.trim();
-
+        const infuraProjectId = document.getElementById(
+          "script3InfuraProjectId"
+        ).value;
+        const walletAddress = document.getElementById("walletAddress").value;
         if (!infuraProjectId || !walletAddress) {
           alert("Please enter both Infura Project ID and Wallet Address.");
           return;
         }
-
-        clearOutput();
-        document
-          .getElementById("output")
-          .setAttribute("data-content", "Checking balance...");
         openConnectionAndSendRequest(3, infuraProjectId, walletAddress);
-
-        clearInputs();
       }
 
       function runScript4() {
-        const infuraProjectId = document
-          .getElementById("script4InfuraProjectId")
-          .value.trim();
-        const senderAddress = document
-          .getElementById("senderAddress")
-          .value.trim();
-        const privateKey = document.getElementById("privateKey").value.trim();
-        const receiverAddress = document
-          .getElementById("receiverAddress")
-          .value.trim();
-
+        const infuraProjectId = document.getElementById(
+          "script4InfuraProjectId"
+        ).value;
+        const senderAddress = document.getElementById("senderAddress").value;
+        const privateKey = document.getElementById("privateKey").value;
+        const receiverAddress =
+          document.getElementById("receiverAddress").value;
         if (
           !infuraProjectId ||
           !senderAddress ||
           !privateKey ||
           !receiverAddress
         ) {
-          alert("Please enter all required fields for Script 4.");
+          alert("Please enter all fields.");
           return;
         }
-
-        clearOutput();
-        document
-          .getElementById("output")
-          .setAttribute("data-content", "Sending transaction...");
         openConnectionAndSendRequest(
           4,
           infuraProjectId,
@@ -491,198 +442,150 @@
           privateKey,
           receiverAddress
         );
-
-        clearInputs();
       }
 
       function runScript5() {
-        const infuraProjectId = document
-          .getElementById("script5InfuraProjectId")
-          .value.trim();
-        const walletAddress = document
-          .getElementById("script5WalletAddress")
-          .value.trim();
-
+        const infuraProjectId = document.getElementById(
+          "script5InfuraProjectId"
+        ).value;
+        const walletAddress = document.getElementById(
+          "script5WalletAddress"
+        ).value;
         if (!infuraProjectId || !walletAddress) {
           alert("Please enter both Infura Project ID and Wallet Address.");
           return;
         }
-
-        clearOutput();
-        document
-          .getElementById("output")
-          .setAttribute("data-content", "Finding latest transaction...");
         openConnectionAndSendRequest(5, infuraProjectId, walletAddress);
-
-        clearInputs();
       }
 
       function runScript6() {
-        const infuraProjectId = document
-          .getElementById("script6InfuraProjectId")
-          .value.trim();
-        const walletAddress = document
-          .getElementById("script6WalletAddress")
-          .value.trim();
-
+        const infuraProjectId = document.getElementById(
+          "script6InfuraProjectId"
+        ).value;
+        const walletAddress = document.getElementById(
+          "script6WalletAddress"
+        ).value;
         if (!infuraProjectId || !walletAddress) {
           alert("Please enter both Infura Project ID and Wallet Address.");
           return;
         }
-
-        clearOutput();
-        document
-          .getElementById("output")
-          .setAttribute("data-content", "Checking transactions...");
         openConnectionAndSendRequest(6, infuraProjectId, walletAddress);
-
-        clearInputs();
       }
 
       function runScript7() {
-        const infuraProjectId = document
-          .getElementById("script7InfuraProjectId")
-          .value.trim();
-        const walletAddress = document
-          .getElementById("script7WalletAddress")
-          .value.trim();
-
+        const infuraProjectId = document.getElementById(
+          "script7InfuraProjectId"
+        ).value;
+        const walletAddress = document.getElementById(
+          "script7WalletAddress"
+        ).value;
         if (!infuraProjectId || !walletAddress) {
           alert("Please enter both Infura Project ID and Wallet Address.");
           return;
         }
-
-        clearOutput();
-        document
-          .getElementById("output")
-          .setAttribute("data-content", "Monitoring transactions...");
         openConnectionAndSendRequest(7, infuraProjectId, walletAddress);
-        document.getElementById("stopScript7Button").style.display = "block";
-        clearInputs();
       }
 
       function runScript8() {
-        const infuraProjectId = document
-          .getElementById("script8InfuraProjectId")
-          .value.trim();
-        const privateKey = document
-          .getElementById("script8PrivateKey")
-          .value.trim();
-        const receiverAddress = document
-          .getElementById("script8ReceiverAddress")
-          .value.trim();
-
+        const infuraProjectId = document.getElementById(
+          "script8InfuraProjectId"
+        ).value;
+        const privateKey = document.getElementById("script8PrivateKey").value;
+        const receiverAddress = document.getElementById(
+          "script8ReceiverAddress"
+        ).value;
         if (!infuraProjectId || !privateKey || !receiverAddress) {
-          alert("Please enter all required fields for Script 8.");
+          alert("Please enter all fields.");
           return;
         }
-
-        clearOutput();
-        document
-          .getElementById("output")
-          .setAttribute("data-content", "Verifying signature...");
         openConnectionAndSendRequest(
           8,
           infuraProjectId,
           privateKey,
           receiverAddress
         );
-
-        clearInputs();
       }
 
       function stopScript7() {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          ws.send("STOP_SCRIPT");
+        if (websocket) {
+          websocket.close();
+          websocket = null;
         }
-        document.getElementById("stopScript7Button").style.display = "none";
+        document
+          .getElementById("output")
+          .setAttribute("data-content", "Monitoring stopped.");
       }
 
       function openConnectionAndSendRequest(scriptId, ...params) {
-        if (ws && ws.readyState === WebSocket.OPEN) {
-          ws.close();
-        }
+        const infuraProjectId =
+          localStorage.getItem("infuraProjectId") || params[0];
+        const url = `wss://sepolia.infura.io/ws/v3/${infuraProjectId}`;
+        websocket = new WebSocket(url);
 
-        ws = new WebSocket("ws://localhost:3001");
-
-        ws.onopen = function () {
-          ws.send(JSON.stringify({ scriptId, params }));
-        };
-
-        ws.onmessage = function (event) {
-          if (event.data === "SCRIPT_FINISHED") {
-            appendToOutput("Script execution finished.");
-            appendToOutput("Connection closed");
-            document.getElementById("stopScript7Button").style.display = "none";
-            ws.close();
-          } else {
-            appendToOutput(event.data);
+        websocket.onopen = () => {
+          appendToOutput(`Connected to ${url}`);
+          // Add specific messages for each script
+          if (scriptId === 1) {
+            websocket.send(
+              JSON.stringify({
+                jsonrpc: "2.0",
+                method: "eth_blockNumber",
+                params: [],
+                id: 1,
+              })
+            );
+          } else if (scriptId === 3) {
+            websocket.send(
+              JSON.stringify({
+                jsonrpc: "2.0",
+                method: "eth_getBalance",
+                params: [params[1], "latest"],
+                id: 3,
+              })
+            );
+          } else if (scriptId === 4) {
+            // Implementation for sending transactions
+          } else if (scriptId === 5) {
+            websocket.send(
+              JSON.stringify({
+                jsonrpc: "2.0",
+                method: "eth_getBlockByNumber",
+                params: ["latest", true],
+                id: 5,
+              })
+            );
+          } else if (scriptId === 6) {
+            // Implementation for checking transactions in last 20 blocks
+          } else if (scriptId === 7) {
+            // Implementation for live tracking wallet
+          } else if (scriptId === 8) {
+            // Implementation for verifying transaction signature
           }
         };
 
-        ws.onclose = function (event) {
-          if (!event.wasClean) {
-            appendToOutput("Connection closed unexpectedly.");
-          }
+        websocket.onmessage = (event) => {
+          appendToOutput(event.data);
+          handleScroll();
         };
 
-        ws.onerror = function (error) {
-          console.error("WebSocket error:", error);
-          appendToOutput("WebSocket error occurred.");
+        websocket.onclose = () => {
+          appendToOutput("Connection closed.");
+        };
+
+        websocket.onerror = (error) => {
+          appendToOutput("WebSocket Error: " + error.message);
         };
       }
 
       function appendToOutput(message) {
-        const outputDiv = document.getElementById("output");
-        const outputContent = document.getElementById("outputContent");
-
-        outputDiv.setAttribute("data-content", "");
-        outputContent.innerHTML += `<div class="line-break">${message.replace(
-          /\n/g,
-          "<br>"
-        )}</div>`;
-        outputDiv.scrollTop = outputDiv.scrollHeight;
+        const output = document.getElementById("output");
+        output.innerHTML += message + "<br/>";
       }
 
       function handleScroll() {
-        const controlsBottom = document
-          .getElementById("controls")
-          .getBoundingClientRect().bottom;
-        const inputBoxes = [
-          "inputBox",
-          "script3InputBox",
-          "script4InputBox",
-          "script5InputBox",
-          "script6InputBox",
-          "script7InputBox",
-          "script8InputBox",
-        ];
-        let fadeStarted = false;
-
-        inputBoxes.forEach((boxId) => {
-          const box = document.getElementById(boxId);
-          if (box.style.display !== "none") {
-            const boxTop = box.getBoundingClientRect().top;
-            const boxBottom = box.getBoundingClientRect().bottom;
-
-            if (boxTop < controlsBottom && !fadeStarted) {
-              const opacity = Math.max(
-                0,
-                (controlsBottom - boxTop) / (boxBottom - boxTop)
-              );
-              box.style.opacity = 1 - opacity;
-              fadeStarted = true;
-            } else if (!fadeStarted) {
-              box.style.opacity = 1;
-            } else {
-              box.style.opacity = 0;
-            }
-          }
-        });
+        const output = document.getElementById("output");
+        output.scrollTop = output.scrollHeight;
       }
-
-      window.addEventListener("scroll", handleScroll);
-      window.addEventListener("resize", handleScroll);
     </script>
   </body>
 </html>
