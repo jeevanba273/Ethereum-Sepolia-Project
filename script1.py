@@ -27,4 +27,4 @@ def connectToInfura():
 
 
 if __name__ == "__main__":
-    app.run(host="54.254.162.138", port=8080) #include public ip address and port
+    app.run(host="0.0.0.0", port=5000) #include public ip address and port
