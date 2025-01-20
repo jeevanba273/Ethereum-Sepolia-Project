@@ -1,21 +1,28 @@
-# test connection
+#Test connection with Infura
 
-import sys
 from web3 import Web3
+from flask import Flask, request, jsonify
 
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: python script1.py <infura_url>")
-        sys.exit(1)
-    
-    infura_project_id = sys.argv[1]
-    infura_url = f"https://sepolia.infura.io/v3/{infura_project_id}"
-    web3 = Web3(Web3.HTTPProvider(infura_url))
+app = Flask(__name__)
+
+@app.route('/connect', methods=['POST'])
+def connectToInfura():
+    HttpStatus_ok = 200
+    HttpStatus_internalServerError = 500
+    HttpStatus_badRequest = 400
+
+    data = request.get_json()
+    infuraProjectId = data.get("infura_project_id")
+    if not infuraProjectId:
+        return jsonify({"error": "Infura Project ID is needed"}), HttpStatus_badRequest
+
+    infuraUrl = f"https://sepolia.infura.io/v3/{infura_project_id}"
+    web3 = Web3(Web3.HTTPProvider(infuraUrl))
     
     if web3.is_connected():
-        print("Successfully connected to Infura (Sepolia)\n")
+        return jsonify({"message": "Successfully connected to Infura"}), HttpStatus_ok
     else:
-        print("\nFailed to connect to Infura (Sepolia)\n")
+        return jsonify({"error": "Failed to connect to Infura (Sepolia)"}), HttpStatus_internalServerError
 
 if __name__ == "__main__":
-    main()
+    app.run(host="<13.228.225.19>", port=<8080>) #include public ip address and port
