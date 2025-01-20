@@ -3,7 +3,7 @@
 from web3 import Web3
 from flask import Flask, request, jsonify
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 @app.route('/connect', methods=['POST'])
 def connectToInfura():
