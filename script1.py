@@ -32,5 +32,5 @@ def connect_to_infura():
         print(f"An error occurred: {str(e)}")  # Log unexpected errors
         return jsonify({"error": str(e)}), 500
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)  # Configure to run on all network interfaces for local testing
