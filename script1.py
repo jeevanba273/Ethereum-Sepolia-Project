@@ -15,14 +15,3 @@ async def connect_to_infura(infura_project_id: str):
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
-@app.get("/check-ecommerce")
-async def check_ecommerce_api():
-    api_url = "https://springboot-ecommerce-project-lkfh.onrender.com/VITproject/connect"
-    try:
-        response = requests.get(api_url)
-        if response.status_code == 200:
-            return {"status": "success", "message": "Successfully connected to E-commerce API."}
-        else:
-            return {"status": "failure", "message": "Failed to connect to E-commerce API. Status code: " + str(response.status_code)}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
