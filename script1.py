@@ -1,23 +1,28 @@
-import sys
+from fastapi import FastAPI
 from web3 import Web3
+import requests
 
-def check_infura_connection(infura_project_id):
+app = FastAPI()
+
+@app.get("/connect/{infura_project_id}")
+async def connect_to_infura(infura_project_id: str):
     try:
-        # Connect to the Ethereum node via Infura
         web3 = Web3(Web3.HTTPProvider(f"https://sepolia.infura.io/v3/{infura_project_id}"))
-        
-        # Check if the connection to the node was successful
         if web3.is_connected():
-            print("Successfully connected to Infura.")
+            return {"status": "success", "message": "Successfully connected to Infura."}
         else:
-            print("Failed to connect to Infura.")
-
+            return {"status": "failure", "message": "Failed to connect to Infura."}
     except Exception as e:
-        print(f"Error: {e}")
+        return {"status": "error", "message": str(e)}
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python script1.py <infura_project_id>")
-    else:
-        infura_project_id = sys.argv[1]
-        check_infura_connection(infura_project_id)
+@app.get("/check-ecommerce")
+async def check_ecommerce_api():
+    api_url = "https://springboot-ecommerce-project-lkfh.onrender.com/VITproject/connect"
+    try:
+        response = requests.get(api_url)
+        if response.status_code == 200:
+            return {"status": "success", "message": "Successfully connected to E-commerce API."}
+        else:
+            return {"status": "failure", "message": "Failed to connect to E-commerce API. Status code: " + str(response.status_code)}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
