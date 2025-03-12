@@ -3,7 +3,7 @@
 A web-based interface to interact with the **Ethereum Sepolia Testnet**, allowing users to perform various blockchain operations such as checking wallet balances, generating wallet addresses, sending transactions, and more.
 
 🎯 **Live Project:**  
-🔗 [Ethereum Sepolia Testnet Project](https://ethereum-sepolia-testnet-project.onrender.com/)
+🔗 [Ethereum Sepolia Testnet Project](https://ethereum-sepolia-project-production.up.railway.app/)
 
 ---
 
