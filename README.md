@@ -5,6 +5,9 @@ A web-based interface to interact with the **Ethereum Sepolia Testnet**, allowin
 🎯 **Live Project:**  
 🔗 [Ethereum Sepolia Testnet Project](https://ethereum-sepolia-project-production.up.railway.app/)
 
+🎯 **Alternate Link:**  
+🔗 [Ethereum Sepolia Testnet Project](https://ethereum-sepolia-testnet-project.onrender.com/)
+
 ---
 
 ## 🌟 Features
